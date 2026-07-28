@@ -295,7 +295,7 @@ VITE_API_URL=https://codealpha-vistora.onrender.com/api
 
 # 👨‍💻 Author
 
-**Ansh Kumar**
+**Aayushi Gupta**
 
 **CodeAlpha Full Stack Development Intern**
 
