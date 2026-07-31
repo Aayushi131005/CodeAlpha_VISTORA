@@ -2,6 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -84,7 +85,7 @@ function App() {
               }
             />
 
-            {/* Orders */}
+            {/* My Orders */}
             <Route
               path="/orders"
               element={
@@ -124,7 +125,7 @@ function App() {
               }
             />
 
-            {/* Users */}
+            {/* Admin Users */}
             <Route
               path="/admin/users"
               element={
@@ -132,6 +133,12 @@ function App() {
                   <Users />
                 </ProtectedRoute>
               }
+            />
+
+            {/* Fallback Route */}
+            <Route
+              path="*"
+              element={<Navigate to="/" replace />}
             />
           </Routes>
         </main>

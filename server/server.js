@@ -20,11 +20,45 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// ==========================
+// CORS Configuration
+// ==========================
 
-// Health check
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://code-alpha-vistora.vercel.app",
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(
+        new Error("Not allowed by CORS")
+      );
+    },
+    credentials: true,
+  })
+);
+
+// ==========================
+// Middleware
+// ==========================
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ==========================
+// Health Check
+// ==========================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -32,7 +66,10 @@ app.get("/", (req, res) => {
   });
 });
 
-// Routes
+// ==========================
+// API Routes
+// ==========================
+
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
@@ -42,7 +79,10 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/users", userRoutes);
 
-// 404 handler
+// ==========================
+// 404 Handler
+// ==========================
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -50,17 +90,24 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
+// ==========================
+// Global Error Handler
+// ==========================
+
 app.use((err, req, res, next) => {
-  console.error("Server Error:", err.message);
+  console.error(err);
 
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || "Internal Server Error",
+    message:
+      err.message || "Internal Server Error",
   });
 });
 
-// Start server
+// ==========================
+// Start Server
+// ==========================
+
 const startServer = async () => {
   try {
     await connectDB();
@@ -68,7 +115,9 @@ const startServer = async () => {
     const PORT = process.env.PORT || 5000;
 
     app.listen(PORT, () => {
-      console.log(`🚀 Vistora server running on port ${PORT}`);
+      console.log(
+        `🚀 Vistora server running on port ${PORT}`
+      );
     });
   } catch (error) {
     console.error(
